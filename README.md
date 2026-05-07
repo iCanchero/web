@@ -17,6 +17,21 @@ To build this application for production:
 bun --bun run build
 ```
 
+## Deep Link Verification Files
+
+This project serves platform verification files at:
+
+- `/.well-known/apple-app-site-association`
+- `/.well-known/assetlinks.json`
+
+Set these environment variables in your deployment:
+
+- `APPLE_TEAM_ID`: Apple Team ID used to compose iOS app IDs
+- `IOS_BUNDLE_ID`: defaults to `com.icanchero.app`
+- `IOS_APP_ID`: optional override, e.g. `ABCDE12345.com.icanchero.app`
+- `ANDROID_PACKAGE_NAME`: defaults to `com.icanchero.app`
+- `ANDROID_SHA256_FINGERPRINTS`: comma-separated SHA256 fingerprints for the deployed app signing certs
+
 ## Testing
 
 This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:

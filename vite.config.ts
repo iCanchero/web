@@ -16,6 +16,7 @@ const config = defineConfig({
     tanstackStart(),
     viteReact(),
   ],
+  envPrefix: 'ICAN_',
 })
 
 export default config
