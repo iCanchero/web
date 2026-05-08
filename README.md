@@ -17,6 +17,38 @@ To build this application for production:
 bun --bun run build
 ```
 
+## Vercel Deployment
+
+This app is deployed with Vercel from GitHub.
+
+### Branch and domain mapping
+
+- Production branch: `main`
+- Production domain: `app.icanchero.com`
+- Preview branch: `dev`
+- Preview domain: `app-dev.icanchero.com`
+
+### Important behavior
+
+- A Preview custom domain shows `No Deployment` until the mapped branch has at least one successful Vercel Preview deployment.
+- To trigger it, push any commit to the preview branch (`dev`).
+- If no preview deploy appears, verify Vercel `Settings -> Git -> Preview Deployments` is enabled.
+
+### Runtime environment variables
+
+Define these in Vercel Project Settings for both Production and Preview as needed:
+
+- `APPLE_TEAM_ID`
+- `IOS_BUNDLE_ID`
+- `IOS_APP_ID`
+- `ANDROID_PACKAGE_NAME`
+- `ANDROID_SHA256_FINGERPRINTS`
+
+Notes:
+
+- Local `.env*` files can keep placeholders only.
+- Real deployed values should come from Vercel environment variables.
+
 ## Deep Link Verification Files
 
 This project serves platform verification files at:
