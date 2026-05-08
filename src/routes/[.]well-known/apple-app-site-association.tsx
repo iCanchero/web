@@ -25,8 +25,17 @@ export const Route = createFileRoute(
 )({
   server: {
     handlers: {
-      GET: async () => {
+      GET: async ({ request }) => {
         const config = readConfigFromEnv()
+        const url = new URL(request.url)
+        const host = request.headers.get('host') ?? ''
+        const userAgent = request.headers.get('user-agent') ?? ''
+        const forwardedFor = request.headers.get('x-forwarded-for') ?? ''
+        const forwardedHost = request.headers.get('x-forwarded-host') ?? ''
+
+        console.info(
+          `[well-known][aasa] method=${request.method} host=${host} forwarded_host=${forwardedHost} path=${url.pathname} ua="${userAgent}" xff="${forwardedFor}" app_id="${config.iosAppId}"`,
+        )
 
         const body = {
           applinks: {
