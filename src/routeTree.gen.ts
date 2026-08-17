@@ -10,24 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DotwellKnownAppleAppSiteAssociationRouteImport } from './routes/[.]well-known/apple-app-site-association'
 import { Route as DotwellKnownAssetlinksDotjsonRouteImport } from './routes/[.]well-known/assetlinks[.]json'
+import { Route as DotwellKnownAppleAppSiteAssociationRouteImport } from './routes/[.]well-known/apple-app-site-association'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DotwellKnownAppleAppSiteAssociationRoute =
-  DotwellKnownAppleAppSiteAssociationRouteImport.update({
-    id: '/.well-known/apple-app-site-association',
-    path: '/.well-known/apple-app-site-association',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const DotwellKnownAssetlinksDotjsonRoute =
   DotwellKnownAssetlinksDotjsonRouteImport.update({
     id: '/.well-known/assetlinks.json',
     path: '/.well-known/assetlinks.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DotwellKnownAppleAppSiteAssociationRoute =
+  DotwellKnownAppleAppSiteAssociationRouteImport.update({
+    id: '/.well-known/apple-app-site-association',
+    path: '/.well-known/apple-app-site-association',
     getParentRoute: () => rootRouteImport,
   } as any)
 
@@ -80,18 +80,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.well-known/apple-app-site-association': {
-      id: '/.well-known/apple-app-site-association'
-      path: '/.well-known/apple-app-site-association'
-      fullPath: '/.well-known/apple-app-site-association'
-      preLoaderRoute: typeof DotwellKnownAppleAppSiteAssociationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/.well-known/assetlinks.json': {
       id: '/.well-known/assetlinks.json'
       path: '/.well-known/assetlinks.json'
       fullPath: '/.well-known/assetlinks.json'
       preLoaderRoute: typeof DotwellKnownAssetlinksDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/apple-app-site-association': {
+      id: '/.well-known/apple-app-site-association'
+      path: '/.well-known/apple-app-site-association'
+      fullPath: '/.well-known/apple-app-site-association'
+      preLoaderRoute: typeof DotwellKnownAppleAppSiteAssociationRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
