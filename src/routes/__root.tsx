@@ -11,6 +11,7 @@ import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
+import { AuthProvider } from '@/components/auth/auth-provider'
 import { TooltipProvider } from '#/components/ui/tooltip'
 
 interface MyRouterContext {
@@ -28,7 +29,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'iCanchero',
       },
     ],
     links: [
@@ -43,12 +44,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="es-MX">
       <head>
         <HeadContent />
       </head>
       <body>
-        <TooltipProvider>{children}</TooltipProvider>
+        <AuthProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </AuthProvider>
         <TanStackDevtools
           config={{
             position: 'bottom-right',

@@ -1,4 +1,36 @@
-Welcome to your new TanStack Start app!
+# iCanchero Web
+
+## iCanchero web authentication
+
+The web app currently supports existing-account password login with an email
+or username, plus the deployed password-recovery flow (email, six-digit code,
+and a new password). User-facing authentication copy is Spanish. The web app
+does not provision users or provide signup, social providers, onboarding,
+email verification, or account deletion yet.
+
+### Local setup
+
+Copy `.env.example` to an environment file owned by your local setup and fill
+these public client variables:
+
+- `ICAN_FIREBASE_API_KEY`
+- `ICAN_FIREBASE_PROJECT_ID`
+- `ICAN_FIREBASE_APP_ID`
+- `ICAN_API_URL`
+
+Run the focused development and verification commands from this directory:
+
+```bash
+npm install
+npm run dev
+npm test
+npm run typecheck
+npm run build
+```
+
+Firebase is initialized lazily in the browser. Unit tests mock Firebase,
+network requests, and email delivery; live Firebase/backend acceptance remains
+a manual environment check.
 
 # Getting Started
 
