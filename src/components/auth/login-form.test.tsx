@@ -25,6 +25,22 @@ describe('LoginForm', () => {
     navigateMock.mockReset().mockResolvedValue(undefined)
   })
 
+  it('renders both login inputs with decorative icon addons', () => {
+    useAuthMock.mockReturnValue({ loginWithPassword: vi.fn() })
+
+    render(<LoginForm />)
+
+    for (const label of ['Correo o usuario', 'Contraseña']) {
+      const group = screen
+        .getByLabelText(label)
+        .closest('[data-slot="input-group"]')
+      expect(group).not.toBeNull()
+      expect(
+        group?.querySelector('[data-slot="input-group-addon"] svg'),
+      ).toHaveAttribute('aria-hidden', 'true')
+    }
+  })
+
   it('supports keyboard form submission and safe redirect navigation', async () => {
     const loginWithPassword = vi.fn().mockResolvedValue(undefined)
     useAuthMock.mockReturnValue({ loginWithPassword })

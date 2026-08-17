@@ -15,6 +15,11 @@ export function sanitizeRedirect(value: unknown): string {
     return DEFAULT_AUTH_REDIRECT
   }
 
+  const pathname = candidate.split(/[?#]/, 1)[0]
+  if (pathname === '/login' || pathname === '/reset-password') {
+    return DEFAULT_AUTH_REDIRECT
+  }
+
   return candidate
 }
 

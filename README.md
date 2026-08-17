@@ -1,12 +1,18 @@
 # iCanchero Web
 
-## iCanchero web authentication
+## iCanchero web account
 
-The web app currently supports existing-account password login with an email
-or username, plus the deployed password-recovery flow (email, six-digit code,
-and a new password). User-facing authentication copy is Spanish. The web app
-does not provision users or provide signup, social providers, onboarding,
-email verification, or account deletion yet.
+The web app supports existing users who sign in with an email or username. They
+can view basic read-only account information, recover a password, and request
+account deletion through the public `/delete-account` resource. User-facing
+account copy is Spanish. The web app does not provision users or provide
+signup, social providers, onboarding, email verification, or profile editing.
+
+`/delete-account` is the intended external account-deletion URL for Google Play
+Console. Production deployment, Play Console configuration, privacy-policy
+review, and destructive acceptance with a purpose-created disposable account
+remain manual release actions; automated tests do not send email or delete a
+live account.
 
 ### Local setup
 

@@ -115,3 +115,15 @@ export async function signOut(): Promise<void> {
 
   await authModule.signOut(auth)
 }
+
+export async function getFirebaseIdToken(): Promise<string> {
+  const auth = await getFirebaseAuth()
+  if (!auth.currentUser) {
+    throw new FirebaseAuthError(
+      'unavailable',
+      'Tu sesión ya no está disponible. Inicia sesión de nuevo.',
+    )
+  }
+
+  return auth.currentUser.getIdToken()
+}

@@ -7,12 +7,31 @@ afterEach(() => {
   cleanup()
 })
 
-if (!globalThis.ResizeObserver) {
+if (!Object.hasOwn(globalThis, 'ResizeObserver')) {
   class TestResizeObserver {
     observe() {}
     unobserve() {}
     disconnect() {}
   }
 
-  globalThis.ResizeObserver = TestResizeObserver as typeof ResizeObserver
+  Object.defineProperty(globalThis, 'ResizeObserver', {
+    configurable: true,
+    writable: true,
+    value: TestResizeObserver,
+  })
 }
+
+Object.defineProperty(globalThis, 'matchMedia', {
+  configurable: true,
+  writable: true,
+  value: (query: string): MediaQueryList => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addEventListener: () => undefined,
+    removeEventListener: () => undefined,
+    addListener: () => undefined,
+    removeListener: () => undefined,
+    dispatchEvent: () => false,
+  }),
+})

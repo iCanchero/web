@@ -1,7 +1,11 @@
 import type { ReactNode } from 'react'
 
+import { AppDownloadLinks } from '@/components/app-download-links'
+import { BrandLogo } from '@/components/brand-logo'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { Spinner } from '@/components/ui/spinner'
 import { cn } from '@/lib/utils'
+import { AuthPanel, AuthPanelContent } from './auth-panel'
 
 export function AuthShell({
   children,
@@ -11,17 +15,17 @@ export function AuthShell({
   className?: string
 }) {
   return (
-    <main className="relative flex min-h-svh items-center justify-center overflow-hidden bg-muted/40 px-4 py-6 sm:px-6 lg:px-8">
+    <main className="bg-muted/40 relative flex min-h-svh items-center justify-center overflow-hidden px-4 py-6 sm:px-6 lg:px-8">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <div className="absolute -left-32 top-8 size-80 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute -right-32 bottom-0 size-96 rounded-full bg-accent/80 blur-3xl" />
+        <div className="bg-brand-light/20 dark:bg-brand-dark/20 absolute top-8 -left-32 size-80 rounded-full blur-3xl" />
+        <div className="bg-brand-light/20 dark:bg-brand-dark/20 absolute -right-32 bottom-0 size-96 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative grid w-full max-w-6xl overflow-hidden rounded-4xl border border-border/80 bg-card/90 shadow-2xl shadow-primary/10 backdrop-blur-sm lg:grid-cols-[minmax(25rem,0.82fr)_minmax(28rem,1.18fr)]">
-        <section className="flex min-h-[38rem] flex-col p-6 sm:p-10">
+      <div className="border-border/80 bg-card/90 shadow-primary/10 relative grid w-full max-w-6xl overflow-hidden rounded-4xl border shadow-2xl backdrop-blur-sm lg:grid-cols-[minmax(23rem,0.78fr)_minmax(30rem,1.22fr)]">
+        <section className="flex min-h-152 flex-col p-6 sm:p-10">
           <BrandHeader />
           <BrandMobileBanner />
           <div
@@ -30,11 +34,23 @@ export function AuthShell({
               className,
             )}
           >
-            <div className="w-full max-w-md">{children}</div>
+            <div className="_max-w-md w-full">{children}</div>
           </div>
-          <p className="text-center text-xs text-muted-foreground sm:text-left">
-            Hecho para encontrar tu próxima cancha.
-          </p>
+          <AppDownloadLinks className="mb-5 items-center lg:hidden" />
+          <div className="text-muted-foreground flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs sm:justify-start">
+            <a
+              className="text-muted-foreground underline-offset-4 hover:underline"
+              href="https://icanchero.com/privacy"
+            >
+              Aviso de privacidad
+            </a>
+            <a
+              className="text-muted-foreground underline-offset-4 hover:underline"
+              href="https://icanchero.com/terms"
+            >
+              Términos y condiciones
+            </a>
+          </div>
         </section>
         <BrandVisual />
       </div>
@@ -47,20 +63,17 @@ function BrandHeader() {
     <header className="flex items-center justify-between gap-4">
       <a
         aria-label="iCanchero, ir al inicio"
-        className="shrink-0 rounded-md outline-none ring-offset-background transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="ring-offset-background focus-visible:ring-ring shrink-0 rounded-md transition-opacity outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-offset-2"
         href="/"
       >
-        <img
+        <BrandLogo
           alt="iCanchero"
           className="h-7 w-auto sm:h-8"
           height="153"
-          src="/images/logo-horizontal-dark.svg"
           width="843"
         />
       </a>
-      <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary">
-        Tu juego, aquí
-      </span>
+      <ThemeToggle />
     </header>
   )
 }
@@ -94,7 +107,7 @@ function BrandVisual() {
   return (
     <aside
       aria-label="iCanchero, hecho para moverse"
-      className="relative hidden min-h-[38rem] overflow-hidden bg-primary lg:block"
+      className="bg-brand-dark relative hidden min-h-152 overflow-hidden lg:block"
     >
       <div
         aria-hidden="true"
@@ -103,7 +116,7 @@ function BrandVisual() {
         <img
           alt=""
           className="h-full w-full rounded-3xl object-cover"
-          src="/images/posters/de-tu-cel-a-la-cancha.jpg"
+          src="/images/posters/gol.jpg"
         />
         <div className="grid min-h-0 grid-cols-2 grid-rows-2 gap-3">
           <img
@@ -114,7 +127,7 @@ function BrandVisual() {
           <img
             alt=""
             className="h-full min-h-0 w-full rounded-3xl object-cover"
-            src="/images/posters/gol.jpg"
+            src="/images/posters/de-tu-cel-a-la-cancha.jpg"
           />
           <img
             alt=""
@@ -128,8 +141,8 @@ function BrandVisual() {
           />
         </div>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/20 to-transparent" />
-      <div className="relative flex min-h-[38rem] flex-col justify-between p-8 text-primary-foreground xl:p-10">
+      <div className="from-brand-dark _via-brand-dark/20 absolute inset-0 bg-linear-to-t to-transparent" />
+      <div className="text-primary-foreground relative flex min-h-152 flex-col justify-between p-8 xl:p-10">
         <div className="flex items-start justify-between gap-4">
           <img
             alt="iCanchero"
@@ -145,16 +158,17 @@ function BrandVisual() {
             src="/images/logo-only-dark.svg"
           />
         </div>
-        <div className="max-w-sm">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-primary-foreground/70">
-            De tu cel a la cancha
+        <div className="_max-w-sm">
+          <p className="text-primary-foreground/90 mb-3 text-xs font-semibold tracking-[0.25em] uppercase">
+            El deporte nos une
           </p>
-          <p className="font-heading text-4xl font-semibold leading-[0.95] tracking-tight xl:text-5xl">
-            La mejor jugada empieza contigo.
+          <p className="font-heading text-4xl leading-[0.95] font-semibold tracking-tight xl:text-5xl">
+            iCanchero Nos Conecta
           </p>
-          <p className="mt-5 max-w-xs text-sm leading-6 text-primary-foreground/80">
+          <p className="text-primary-foreground/80 mt-5 max-w-xs text-sm leading-6">
             Encuentra a tu gente, reserva tu espacio y vuelve a jugar.
           </p>
+          <AppDownloadLinks className="mt-6" inverse />
         </div>
       </div>
     </aside>
@@ -164,16 +178,12 @@ function BrandVisual() {
 export function AuthLoadingState() {
   return (
     <AuthShell>
-      <div
-        aria-label="Cargando"
-        className="flex min-h-48 items-center justify-center rounded-4xl border bg-card p-8 shadow-md"
-        role="status"
-      >
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+      <AuthPanel aria-label="Cargando" role="status">
+        <AuthPanelContent className="text-muted-foreground flex min-h-48 items-center justify-center gap-3 text-sm">
           <Spinner aria-label="Cargando" />
           Cargando tu cuenta…
-        </div>
-      </div>
+        </AuthPanelContent>
+      </AuthPanel>
     </AuthShell>
   )
 }

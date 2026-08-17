@@ -4,13 +4,13 @@ import type { FormEvent } from 'react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  AuthPanel,
+  AuthPanelContent,
+  AuthPanelDescription,
+  AuthPanelFooter,
+  AuthPanelHeader,
+  AuthPanelTitle,
+} from '@/components/auth/auth-panel'
 import {
   Field,
   FieldDescription,
@@ -167,15 +167,15 @@ export function PasswordResetForm({
 
   if (step === 'email') {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Recupera tu contraseña</CardTitle>
-          <CardDescription>
+      <AuthPanel>
+        <AuthPanelHeader>
+          <AuthPanelTitle>Recupera tu contraseña</AuthPanelTitle>
+          <AuthPanelDescription>
             Te enviaremos un código al correo de tu cuenta.
-          </CardDescription>
-        </CardHeader>
+          </AuthPanelDescription>
+        </AuthPanelHeader>
         <form onSubmit={submitEmail} noValidate>
-          <CardContent className="flex flex-col gap-6">
+          <AuthPanelContent className="flex flex-col gap-6">
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
@@ -200,8 +200,8 @@ export function PasswordResetForm({
                 />
               </Field>
             </FieldGroup>
-          </CardContent>
-          <CardFooter className="flex-col items-stretch gap-4">
+          </AuthPanelContent>
+          <AuthPanelFooter className="mt-6 flex-col items-stretch gap-4">
             <Button className="w-full" type="submit" disabled={pending}>
               {pending && (
                 <Spinner aria-label="Cargando" data-icon="inline-start" />
@@ -209,29 +209,29 @@ export function PasswordResetForm({
               {pending ? 'Enviando…' : 'Enviar código'}
             </Button>
             <Link
-              className="text-center text-sm text-muted-foreground underline-offset-4 hover:underline"
+              className="text-muted-foreground text-center text-sm underline-offset-4 hover:underline"
               to="/login"
               search={{ redirect: '/account' }}
             >
               Volver a iniciar sesión
             </Link>
-          </CardFooter>
+          </AuthPanelFooter>
         </form>
-      </Card>
+      </AuthPanel>
     )
   }
 
   if (step === 'code') {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Escribe tu código</CardTitle>
-          <CardDescription>
+      <AuthPanel>
+        <AuthPanelHeader>
+          <AuthPanelTitle>Escribe tu código</AuthPanelTitle>
+          <AuthPanelDescription>
             Revisa {email} y escribe el código de seis dígitos.
-          </CardDescription>
-        </CardHeader>
+          </AuthPanelDescription>
+        </AuthPanelHeader>
         <form onSubmit={submitCode} noValidate>
-          <CardContent className="flex flex-col gap-6">
+          <AuthPanelContent className="flex flex-col gap-6">
             {notice && (
               <Alert>
                 <AlertDescription>{notice}</AlertDescription>
@@ -273,8 +273,8 @@ export function PasswordResetForm({
                 </FieldDescription>
               </Field>
             </FieldGroup>
-          </CardContent>
-          <CardFooter className="flex-col items-stretch gap-4">
+          </AuthPanelContent>
+          <AuthPanelFooter className="mt-6 flex-col items-stretch gap-4">
             <Button className="w-full" type="submit" disabled={pending}>
               {pending && (
                 <Spinner aria-label="Cargando" data-icon="inline-start" />
@@ -293,23 +293,23 @@ export function PasswordResetForm({
               )}
               Solicitar otro código
             </Button>
-          </CardFooter>
+          </AuthPanelFooter>
         </form>
-      </Card>
+      </AuthPanel>
     )
   }
 
   if (step === 'password') {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Crea una contraseña nueva</CardTitle>
-          <CardDescription>
+      <AuthPanel>
+        <AuthPanelHeader>
+          <AuthPanelTitle>Crea una contraseña nueva</AuthPanelTitle>
+          <AuthPanelDescription>
             Usa al menos seis caracteres para proteger tu cuenta.
-          </CardDescription>
-        </CardHeader>
+          </AuthPanelDescription>
+        </AuthPanelHeader>
         <form onSubmit={submitPassword} noValidate>
-          <CardContent className="flex flex-col gap-6">
+          <AuthPanelContent className="flex flex-col gap-6">
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
@@ -337,36 +337,36 @@ export function PasswordResetForm({
                 </FieldDescription>
               </Field>
             </FieldGroup>
-          </CardContent>
-          <CardFooter>
+          </AuthPanelContent>
+          <AuthPanelFooter className="mt-6">
             <Button className="w-full" type="submit" disabled={pending}>
               {pending && (
                 <Spinner aria-label="Cargando" data-icon="inline-start" />
               )}
               {pending ? 'Guardando…' : 'Guardar contraseña'}
             </Button>
-          </CardFooter>
+          </AuthPanelFooter>
         </form>
-      </Card>
+      </AuthPanel>
     )
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Contraseña actualizada</CardTitle>
-        <CardDescription>
+    <AuthPanel>
+      <AuthPanelHeader>
+        <AuthPanelTitle>Contraseña actualizada</AuthPanelTitle>
+        <AuthPanelDescription>
           Ya puedes iniciar sesión con tu nueva contraseña.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </AuthPanelDescription>
+      </AuthPanelHeader>
+      <AuthPanelContent>
         <Alert>
           <AlertDescription>
             Tu contraseña se actualizó correctamente.
           </AlertDescription>
         </Alert>
-      </CardContent>
-      <CardFooter>
+      </AuthPanelContent>
+      <AuthPanelFooter>
         <Button
           className="w-full"
           render={
@@ -378,7 +378,7 @@ export function PasswordResetForm({
         >
           Ir a iniciar sesión
         </Button>
-      </CardFooter>
-    </Card>
+      </AuthPanelFooter>
+    </AuthPanel>
   )
 }

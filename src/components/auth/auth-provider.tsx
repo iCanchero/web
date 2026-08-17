@@ -31,6 +31,7 @@ export type AuthContextValue = {
   user: AuthUser | null
   loginWithPassword: (identifier: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  finishAccountDeletion: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
@@ -52,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null)
   const statusRef = useRef<AuthStatus>('loading')
   const waitersRef = useRef<Array<() => void>>([])
+  const deletionCleanupRef = useRef<Promise<void> | null>(null)
 
   const setAuthState = useCallback((nextUser: AuthUser | null) => {
     const nextStatus: AuthStatus = nextUser
@@ -132,9 +134,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signOut()
   }, [])
 
+  const finishAccountDeletion = useCallback(() => {
+    if (deletionCleanupRef.current) {
+      return deletionCleanupRef.current
+    }
+
+    setAuthState(null)
+    const cleanup = signOut()
+      .catch((error: unknown) => {
+        console.error(
+          'No pudimos cerrar la sesión eliminada en Firebase.',
+          error,
+        )
+      })
+      .finally(() => {
+        deletionCleanupRef.current = null
+      })
+    deletionCleanupRef.current = cleanup
+    return cleanup
+  }, [setAuthState])
+
   const value = useMemo<AuthContextValue>(
-    () => ({ status, user, loginWithPassword, logout }),
-    [loginWithPassword, logout, status, user],
+    () => ({
+      status,
+      user,
+      loginWithPassword,
+      logout,
+      finishAccountDeletion,
+    }),
+    [finishAccountDeletion, loginWithPassword, logout, status, user],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

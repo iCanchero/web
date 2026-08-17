@@ -1,24 +1,24 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
+import { LockKeyholeIcon, UserRoundIcon } from 'lucide-react'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  AuthPanel,
+  AuthPanelContent,
+  AuthPanelDescription,
+  AuthPanelFooter,
+  AuthPanelHeader,
+  AuthPanelTitle,
+} from '@/components/auth/auth-panel'
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@/components/ui/input-group'
 import { Spinner } from '@/components/ui/spinner'
 import { useAuth } from '@/components/auth/auth-provider'
 import { getAuthErrorMessage } from '@/lib/auth/auth-errors'
@@ -67,15 +67,15 @@ export function LoginForm({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Inicia sesión</CardTitle>
-        <CardDescription>
+    <AuthPanel>
+      <AuthPanelHeader>
+        <AuthPanelTitle>Iniciar sesión</AuthPanelTitle>
+        <AuthPanelDescription>
           Entra con el correo o usuario de tu cuenta de iCanchero.
-        </CardDescription>
-      </CardHeader>
+        </AuthPanelDescription>
+      </AuthPanelHeader>
       <form onSubmit={handleSubmit} noValidate>
-        <CardContent className="flex flex-col gap-6">
+        <AuthPanelContent className="flex flex-col gap-6">
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
@@ -86,42 +86,49 @@ export function LoginForm({
               <FieldLabel htmlFor="login-identifier">
                 Correo o usuario
               </FieldLabel>
-              <Input
-                id="login-identifier"
-                name="identifier"
-                type="text"
-                autoComplete="username"
-                aria-invalid={identifierError}
-                value={identifier}
-                onChange={(event) => {
-                  setIdentifier(event.target.value)
-                  setIdentifierError(false)
-                  setError(null)
-                }}
-              />
-              <FieldDescription>
-                Puedes escribir tu usuario con o sin @.
-              </FieldDescription>
+              <InputGroup>
+                <InputGroupInput
+                  id="login-identifier"
+                  name="identifier"
+                  type="text"
+                  autoComplete="username"
+                  aria-invalid={identifierError}
+                  value={identifier}
+                  onChange={(event) => {
+                    setIdentifier(event.target.value)
+                    setIdentifierError(false)
+                    setError(null)
+                  }}
+                />
+                <InputGroupAddon>
+                  <UserRoundIcon aria-hidden="true" />
+                </InputGroupAddon>
+              </InputGroup>
             </Field>
             <Field data-invalid={passwordError}>
               <FieldLabel htmlFor="login-password">Contraseña</FieldLabel>
-              <Input
-                id="login-password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                aria-invalid={passwordError}
-                value={password}
-                onChange={(event) => {
-                  setPassword(event.target.value)
-                  setPasswordError(false)
-                  setError(null)
-                }}
-              />
+              <InputGroup>
+                <InputGroupInput
+                  id="login-password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  aria-invalid={passwordError}
+                  value={password}
+                  onChange={(event) => {
+                    setPassword(event.target.value)
+                    setPasswordError(false)
+                    setError(null)
+                  }}
+                />
+                <InputGroupAddon>
+                  <LockKeyholeIcon aria-hidden="true" />
+                </InputGroupAddon>
+              </InputGroup>
             </Field>
           </FieldGroup>
-        </CardContent>
-        <CardFooter className="flex-col items-stretch gap-4">
+        </AuthPanelContent>
+        <AuthPanelFooter className="mt-6 flex-col items-stretch gap-4">
           <Button className="w-full" type="submit" disabled={pending}>
             {pending && (
               <Spinner aria-label="Cargando" data-icon="inline-start" />
@@ -129,13 +136,13 @@ export function LoginForm({
             {pending ? 'Iniciando sesión…' : 'Iniciar sesión'}
           </Button>
           <Link
-            className="text-center text-sm text-muted-foreground underline-offset-4 hover:underline"
+            className="text-muted-foreground text-center text-sm underline-offset-4 hover:underline"
             to="/reset-password"
           >
             ¿Olvidaste tu contraseña?
           </Link>
-        </CardFooter>
+        </AuthPanelFooter>
       </form>
-    </Card>
+    </AuthPanel>
   )
 }

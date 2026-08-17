@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 import { AuthLoadingState, AuthShell } from '@/components/auth/auth-shell'
 import { LoginForm } from '@/components/auth/login-form'
@@ -20,19 +19,17 @@ export const Route = createFileRoute('/login')({
     redirect: sanitizeRedirect(search.redirect),
     email: sanitizeEmail(search.email),
   }),
+  beforeLoad: ({ context, search }) => {
+    if (context.auth.status === 'authenticated') {
+      throw redirect({ to: search.redirect, replace: true })
+    }
+  },
   component: LoginPage,
 })
 
 function LoginPage() {
   const { status } = useAuth()
-  const navigate = useNavigate()
   const search = Route.useSearch()
-
-  useEffect(() => {
-    if (status === 'authenticated') {
-      void navigate({ to: search.redirect, replace: true })
-    }
-  }, [navigate, search.redirect, status])
 
   if (status === 'loading' || status === 'authenticated') {
     return <AuthLoadingState />

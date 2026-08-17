@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const app = { name: '[DEFAULT]' }
-const auth = { currentUser: null }
+const getIdToken = vi.fn()
+const auth: { currentUser: null | { getIdToken: typeof getIdToken } } = {
+  currentUser: null,
+}
 const getApps = vi.fn(() => [])
 const getApp = vi.fn(() => app)
 const initializeApp = vi.fn(() => app)
@@ -30,6 +33,8 @@ describe('firebase-auth', () => {
     initializeApp.mockClear()
     getAuth.mockClear()
     setPersistence.mockClear()
+    auth.currentUser = null
+    getIdToken.mockReset()
   })
 
   afterEach(() => {
@@ -73,5 +78,25 @@ describe('firebase-auth', () => {
     expect(initializeApp).not.toHaveBeenCalled()
 
     vi.stubGlobal('window', browserWindow)
+  })
+
+  it('gets a fresh token from the current Firebase user', async () => {
+    vi.resetModules()
+    getIdToken.mockResolvedValue('id-token')
+    auth.currentUser = { getIdToken }
+    const firebaseAuth = await import('./firebase-auth')
+
+    await expect(firebaseAuth.getFirebaseIdToken()).resolves.toBe('id-token')
+    expect(getIdToken).toHaveBeenCalledTimes(1)
+  })
+
+  it('rejects token access when the Firebase session is missing', async () => {
+    vi.resetModules()
+    const firebaseAuth = await import('./firebase-auth')
+
+    await expect(firebaseAuth.getFirebaseIdToken()).rejects.toMatchObject({
+      code: 'unavailable',
+      message: expect.stringContaining('sesión'),
+    })
   })
 })
