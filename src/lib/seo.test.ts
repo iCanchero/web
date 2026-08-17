@@ -12,7 +12,7 @@ describe('createSeoHead', () => {
     })
     expect(head.meta).toContainEqual({
       property: 'og:image',
-      content: 'https://app.icanchero.com/images/posters/gol.jpg',
+      content: 'https://app.icanchero.com/images/social/icanchero-og.png',
     })
     expect(head.meta).toContainEqual({
       name: 'twitter:card',

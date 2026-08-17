@@ -1,7 +1,7 @@
 const SITE_ORIGIN = import.meta.env.ICAN_SITE_URL || 'https://app.icanchero.com'
 const DEFAULT_TITLE = 'iCanchero | Listo para ganar'
 const DEFAULT_DESCRIPTION = 'El deporte nos une, iCanchero ¡nos conecta!'
-const DEFAULT_SOCIAL_IMAGE = `${SITE_ORIGIN}/images/posters/gol.jpg`
+const DEFAULT_SOCIAL_IMAGE = `${SITE_ORIGIN}/images/social/icanchero-og.png`
 
 type SeoHeadOptions = {
   title?: string
@@ -30,9 +30,9 @@ export function createSeoHead({
       { property: 'og:description', content: description },
       { property: 'og:url', content: canonicalUrl },
       { property: 'og:image', content: DEFAULT_SOCIAL_IMAGE },
-      { property: 'og:image:type', content: 'image/jpeg' },
-      { property: 'og:image:width', content: '1080' },
-      { property: 'og:image:height', content: '1350' },
+      { property: 'og:image:type', content: 'image/png' },
+      { property: 'og:image:width', content: '1200' },
+      { property: 'og:image:height', content: '630' },
       {
         property: 'og:image:alt',
         content: 'Jugador celebrando un gol con la marca iCanchero',
