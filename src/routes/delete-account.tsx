@@ -15,9 +15,16 @@ import { useAuth } from '@/components/auth/auth-provider'
 import { AuthLoadingState, AuthShell } from '@/components/auth/auth-shell'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { createSeoHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/delete-account')({
-  head: () => ({ meta: [{ title: 'Eliminar cuenta | iCanchero' }] }),
+  head: () =>
+    createSeoHead({
+      title: 'Eliminar cuenta | iCanchero',
+      description:
+        'Recurso oficial para solicitar la eliminación de tu cuenta de iCanchero y los datos asociados.',
+      path: '/delete-account',
+    }),
   component: DeleteAccountResource,
 })
 

@@ -18,6 +18,7 @@ import {
   ThemeProvider,
 } from '@/components/theme-provider'
 import type { RouterAuthState } from '@/lib/auth/router-auth'
+import { createSeoHead } from '@/lib/seo'
 import { TooltipProvider } from '#/components/ui/tooltip'
 
 interface MyRouterContext {
@@ -26,26 +27,27 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  head: () => ({
-    meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: 'iCanchero',
-      },
-    ],
-    links: [
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
-    ],
-  }),
+  head: () => {
+    const seo = createSeoHead()
+
+    return {
+      meta: [
+        {
+          charSet: 'utf-8',
+        },
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1',
+        },
+        ...seo.meta,
+      ],
+      links: [
+        { rel: 'icon', href: '/favicon.ico' },
+        { rel: 'manifest', href: '/manifest.json' },
+        { rel: 'stylesheet', href: appCss },
+      ],
+    }
+  },
   shellComponent: RootDocument,
 })
 

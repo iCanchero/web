@@ -8,6 +8,7 @@ import {
   sanitizeEmail,
   sanitizeRedirect,
 } from '@/lib/auth/redirects'
+import { createSeoHead } from '@/lib/seo'
 
 type LoginSearch = {
   redirect: string
@@ -15,6 +16,13 @@ type LoginSearch = {
 }
 
 export const Route = createFileRoute('/login')({
+  head: () =>
+    createSeoHead({
+      title: 'Iniciar sesión | iCanchero',
+      description: 'Inicia sesión para administrar tu cuenta de iCanchero.',
+      path: '/login',
+      noIndex: true,
+    }),
   validateSearch: (search: Record<string, unknown>): LoginSearch => ({
     redirect: sanitizeRedirect(search.redirect),
     email: sanitizeEmail(search.email),

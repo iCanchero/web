@@ -23,6 +23,7 @@ these public client variables:
 - `ICAN_FIREBASE_PROJECT_ID`
 - `ICAN_FIREBASE_APP_ID`
 - `ICAN_API_URL`
+- `ICAN_SITE_URL` (for example, `https://app-dev.icanchero.com` on Preview)
 
 Run the focused development and verification commands from this directory:
 
@@ -80,6 +81,8 @@ Define these in Vercel Project Settings for both Production and Preview as neede
 - `IOS_APP_ID`
 - `ANDROID_PACKAGE_NAME`
 - `ANDROID_SHA256_FINGERPRINTS`
+- `ICAN_SITE_URL` (`https://app.icanchero.com` in Production and
+  `https://app-dev.icanchero.com` in Preview)
 
 Notes:
 

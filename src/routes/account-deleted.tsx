@@ -11,9 +11,16 @@ import {
 } from '@/components/auth/auth-panel'
 import { AuthShell } from '@/components/auth/auth-shell'
 import { Button } from '@/components/ui/button'
+import { createSeoHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/account-deleted')({
-  head: () => ({ meta: [{ title: 'Cuenta eliminada | iCanchero' }] }),
+  head: () =>
+    createSeoHead({
+      title: 'Cuenta eliminada | iCanchero',
+      description: 'Confirmación de eliminación de una cuenta de iCanchero.',
+      path: '/account-deleted',
+      noIndex: true,
+    }),
   component: AccountDeletedPage,
 })
 
