@@ -1,21 +1,17 @@
 {
-  "projectName": "web",
+  "projectName": "iCanchero Web App",
   "mode": "file-router",
   "typescript": true,
-  "packageManager": "bun",
+  "packageManager": "npm",
   "includeExamples": false,
   "tailwind": true,
+  "projectPreset": "default",
   "addOnOptions": {},
-  "envVarValues": {},
-  "git": true,
+  "git": false,
   "install": true,
+  "intent": true,
   "routerOnly": false,
   "version": 1,
   "framework": "react",
-  "chosenAddOns": [
-    "eslint",
-    "nitro",
-    "shadcn",
-    "tanstack-query"
-  ]
+  "chosenAddOns": ["eslint", "nitro", "tanstack-query"]
 }

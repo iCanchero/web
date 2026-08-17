@@ -20,42 +20,42 @@ function readConfigFromEnv(): DeepLinkConfig {
   }
 }
 
-export const Route = createFileRoute(
-  '/.well-known/apple-app-site-association',
-)({
-  server: {
-    handlers: {
-      GET: async ({ request }) => {
-        const config = readConfigFromEnv()
-        const url = new URL(request.url)
-        const host = request.headers.get('host') ?? ''
-        const userAgent = request.headers.get('user-agent') ?? ''
-        const forwardedFor = request.headers.get('x-forwarded-for') ?? ''
-        const forwardedHost = request.headers.get('x-forwarded-host') ?? ''
+export const Route = createFileRoute('/.well-known/apple-app-site-association')(
+  {
+    server: {
+      handlers: {
+        GET: async ({ request }) => {
+          const config = readConfigFromEnv()
+          const url = new URL(request.url)
+          const host = request.headers.get('host') ?? ''
+          const userAgent = request.headers.get('user-agent') ?? ''
+          const forwardedFor = request.headers.get('x-forwarded-for') ?? ''
+          const forwardedHost = request.headers.get('x-forwarded-host') ?? ''
 
-        console.info(
-          `[well-known][aasa] method=${request.method} host=${host} forwarded_host=${forwardedHost} path=${url.pathname} ua="${userAgent}" xff="${forwardedFor}" app_id="${config.iosAppId}"`,
-        )
+          console.info(
+            `[well-known][aasa] method=${request.method} host=${host} forwarded_host=${forwardedHost} path=${url.pathname} ua="${userAgent}" xff="${forwardedFor}" app_id="${config.iosAppId}"`,
+          )
 
-        const body = {
-          applinks: {
-            apps: [],
-            details: [
-              {
-                appID: config.iosAppId,
-                paths: config.paths,
-              },
-            ],
-          },
-        }
+          const body = {
+            applinks: {
+              apps: [],
+              details: [
+                {
+                  appID: config.iosAppId,
+                  paths: config.paths,
+                },
+              ],
+            },
+          }
 
-        return new Response(JSON.stringify(body), {
-          headers: {
-            'content-type': 'application/json; charset=utf-8',
-            'cache-control': 'public, max-age=300',
-          },
-        })
+          return new Response(JSON.stringify(body), {
+            headers: {
+              'content-type': 'application/json; charset=utf-8',
+              'cache-control': 'public, max-age=300',
+            },
+          })
+        },
       },
     },
   },
-})
+)

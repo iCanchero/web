@@ -18,8 +18,11 @@ function parseFingerprints(value: string | undefined): string[] {
 
 function readConfigFromEnv(): DeepLinkConfig {
   return {
-    androidPackageName: process.env.ANDROID_PACKAGE_NAME?.trim() ?? 'com.icanchero.app',
-    sha256Fingerprints: parseFingerprints(process.env.ANDROID_SHA256_FINGERPRINTS),
+    androidPackageName:
+      process.env.ANDROID_PACKAGE_NAME?.trim() ?? 'com.icanchero.app',
+    sha256Fingerprints: parseFingerprints(
+      process.env.ANDROID_SHA256_FINGERPRINTS,
+    ),
   }
 }
 
