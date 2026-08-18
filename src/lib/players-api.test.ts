@@ -65,7 +65,7 @@ describe('playersApi', () => {
     )
   })
 
-  it('sends the password recovery request and accepts 204', async () => {
+  it('sends the password recovery identifier and accepts 204', async () => {
     fetchMock.mockResolvedValue(response(204))
 
     await expect(
@@ -75,7 +75,20 @@ describe('playersApi', () => {
     expect(fetchMock).toHaveBeenCalledWith(
       'https://api.example.test/players/users/verifications/password-reset',
       expect.objectContaining({
-        body: JSON.stringify({ email: 'person@example.com' }),
+        body: JSON.stringify({ identifier: 'person@example.com' }),
+      }),
+    )
+  })
+
+  it('normalizes a username recovery identifier', async () => {
+    fetchMock.mockResolvedValue(response(204))
+
+    await playersApi.requestPasswordReset(' @Jugador ')
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://api.example.test/players/users/verifications/password-reset',
+      expect.objectContaining({
+        body: JSON.stringify({ identifier: 'jugador' }),
       }),
     )
   })
@@ -96,7 +109,10 @@ describe('playersApi', () => {
       1,
       'https://api.example.test/players/users/verifications/verify',
       expect.objectContaining({
-        body: JSON.stringify({ email: 'person@example.com', code: '123456' }),
+        body: JSON.stringify({
+          identifier: 'person@example.com',
+          code: '123456',
+        }),
       }),
     )
     expect(fetchMock).toHaveBeenNthCalledWith(

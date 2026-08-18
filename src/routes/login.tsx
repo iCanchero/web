@@ -6,6 +6,7 @@ import { useAuth } from '@/components/auth/auth-provider'
 import {
   DEFAULT_AUTH_REDIRECT,
   sanitizeEmail,
+  sanitizeIdentifier,
   sanitizeRedirect,
 } from '@/lib/auth/redirects'
 import { createSeoHead } from '@/lib/seo'
@@ -13,6 +14,7 @@ import { createSeoHead } from '@/lib/seo'
 type LoginSearch = {
   redirect: string
   email?: string
+  identifier?: string
 }
 
 export const Route = createFileRoute('/login')({
@@ -26,6 +28,7 @@ export const Route = createFileRoute('/login')({
   validateSearch: (search: Record<string, unknown>): LoginSearch => ({
     redirect: sanitizeRedirect(search.redirect),
     email: sanitizeEmail(search.email),
+    identifier: sanitizeIdentifier(search.identifier),
   }),
   beforeLoad: ({ context, search }) => {
     if (context.auth.status === 'authenticated') {
@@ -47,7 +50,7 @@ function LoginPage() {
     <AuthShell>
       <LoginForm
         redirect={search.redirect || DEFAULT_AUTH_REDIRECT}
-        initialIdentifier={search.email}
+        initialIdentifier={search.identifier ?? search.email}
       />
     </AuthShell>
   )

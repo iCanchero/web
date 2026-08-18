@@ -41,10 +41,10 @@ describe('PasswordResetForm', () => {
     vi.useRealTimers()
   })
 
-  async function requestCode() {
+  async function requestCode(identifier = ' Person@Example.com ') {
     render(<PasswordResetForm />)
-    fireEvent.change(screen.getByLabelText('Correo electrónico'), {
-      target: { value: ' Person@Example.com ' },
+    fireEvent.change(screen.getByLabelText('Correo o usuario'), {
+      target: { value: identifier },
     })
     fireEvent.submit(screen.getByRole('button', { name: 'Enviar código' }))
     await screen.findByText('Escribe tu código')
@@ -55,24 +55,35 @@ describe('PasswordResetForm', () => {
 
     expect(
       screen.getByText(
-        'Si existe una cuenta con ese correo, recibirás un código.',
+        'Si existe una cuenta con ese identificador, recibirás un código.',
       ),
     ).toBeInTheDocument()
     expect(requestPasswordResetMock).toHaveBeenCalledWith('person@example.com')
   })
 
-  it('validates email and code before calling the API', async () => {
+  it('accepts a username and keeps the destination email private', async () => {
+    await requestCode('@Jugador')
+
+    expect(requestPasswordResetMock).toHaveBeenCalledWith('jugador')
+    expect(
+      screen.getByText(
+        'Revisa el correo asociado a tu cuenta y escribe el código de seis dígitos.',
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it('validates identifier and code before calling the API', async () => {
     render(<PasswordResetForm />)
-    fireEvent.change(screen.getByLabelText('Correo electrónico'), {
+    fireEvent.change(screen.getByLabelText('Correo o usuario'), {
       target: { value: 'not-an-email' },
     })
     fireEvent.submit(screen.getByRole('button', { name: 'Enviar código' }))
     expect(
-      await screen.findByText('Escribe un correo electrónico válido.'),
+      await screen.findByText('Escribe un correo o usuario válido.'),
     ).toBeInTheDocument()
     expect(requestPasswordResetMock).not.toHaveBeenCalled()
 
-    fireEvent.change(screen.getByLabelText('Correo electrónico'), {
+    fireEvent.change(screen.getByLabelText('Correo o usuario'), {
       target: { value: 'person@example.com' },
     })
     fireEvent.submit(screen.getByRole('button', { name: 'Enviar código' }))
@@ -119,7 +130,7 @@ describe('PasswordResetForm', () => {
   it('enforces a 30-second resend deadline based on an absolute clock', async () => {
     vi.useFakeTimers()
     render(<PasswordResetForm />)
-    fireEvent.change(screen.getByLabelText('Correo electrónico'), {
+    fireEvent.change(screen.getByLabelText('Correo o usuario'), {
       target: { value: 'person@example.com' },
     })
     await act(async () => {

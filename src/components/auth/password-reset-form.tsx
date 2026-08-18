@@ -26,25 +26,21 @@ import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { getPasswordResetErrorMessage } from '@/lib/auth/auth-errors'
 import { playersApi } from '@/lib/players-api'
-import { sanitizeEmail } from '@/lib/auth/redirects'
+import { sanitizeIdentifier } from '@/lib/auth/redirects'
 import { Link } from '@tanstack/react-router'
 
 type ResetStep = 'email' | 'code' | 'password' | 'success'
 
 const GENERIC_REQUEST_MESSAGE =
-  'Si existe una cuenta con ese correo, recibirás un código.'
-
-function normalizeEmail(value: string): string {
-  return value.trim().toLowerCase()
-}
+  'Si existe una cuenta con ese identificador, recibirás un código.'
 
 export function PasswordResetForm({
-  initialEmail = '',
+  initialIdentifier = '',
 }: {
-  initialEmail?: string
+  initialIdentifier?: string
 }) {
   const [step, setStep] = useState<ResetStep>('email')
-  const [email, setEmail] = useState(initialEmail)
+  const [identifier, setIdentifier] = useState(initialIdentifier)
   const [code, setCode] = useState('')
   const [token, setToken] = useState<string | null>(null)
   const [newPassword, setNewPassword] = useState('')
@@ -75,18 +71,18 @@ export function PasswordResetForm({
 
   const submitEmail = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const normalizedEmail = normalizeEmail(email)
-    if (!sanitizeEmail(normalizedEmail)) {
-      setError('Escribe un correo electrónico válido.')
+    const normalizedIdentifier = sanitizeIdentifier(identifier)
+    if (!normalizedIdentifier) {
+      setError('Escribe un correo o usuario válido.')
       return
     }
 
-    setEmail(normalizedEmail)
+    setIdentifier(normalizedIdentifier)
     setError(null)
     setNotice(null)
     setPending(true)
     try {
-      await playersApi.requestPasswordReset(normalizedEmail)
+      await playersApi.requestPasswordReset(normalizedIdentifier)
       setNotice(GENERIC_REQUEST_MESSAGE)
       setCode('')
       setResendDeadline(Date.now() + 30_000)
@@ -106,7 +102,7 @@ export function PasswordResetForm({
     setError(null)
     setPending(true)
     try {
-      await playersApi.requestPasswordReset(email)
+      await playersApi.requestPasswordReset(identifier)
       setCode('')
       setNotice(GENERIC_REQUEST_MESSAGE)
       setResendDeadline(Date.now() + 30_000)
@@ -127,7 +123,10 @@ export function PasswordResetForm({
     setError(null)
     setPending(true)
     try {
-      const response = await playersApi.verifyPasswordResetCode(email, code)
+      const response = await playersApi.verifyPasswordResetCode(
+        identifier,
+        code,
+      )
       setToken(response.token)
       setCode('')
       setStep('password')
@@ -171,7 +170,7 @@ export function PasswordResetForm({
         <AuthPanelHeader>
           <AuthPanelTitle>Recupera tu contraseña</AuthPanelTitle>
           <AuthPanelDescription>
-            Te enviaremos un código al correo de tu cuenta.
+            Te enviaremos un código al correo asociado a tu cuenta.
           </AuthPanelDescription>
         </AuthPanelHeader>
         <form onSubmit={submitEmail} noValidate>
@@ -183,18 +182,18 @@ export function PasswordResetForm({
             )}
             <FieldGroup>
               <Field data-invalid={Boolean(error)}>
-                <FieldLabel htmlFor="reset-email">
-                  Correo electrónico
+                <FieldLabel htmlFor="reset-identifier">
+                  Correo o usuario
                 </FieldLabel>
                 <Input
-                  id="reset-email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
+                  id="reset-identifier"
+                  name="identifier"
+                  type="text"
+                  autoComplete="username"
                   aria-invalid={Boolean(error)}
-                  value={email}
+                  value={identifier}
                   onChange={(event) => {
-                    setEmail(event.target.value)
+                    setIdentifier(event.target.value)
                     setError(null)
                   }}
                 />
@@ -227,7 +226,8 @@ export function PasswordResetForm({
         <AuthPanelHeader>
           <AuthPanelTitle>Escribe tu código</AuthPanelTitle>
           <AuthPanelDescription>
-            Revisa {email} y escribe el código de seis dígitos.
+            Revisa el correo asociado a tu cuenta y escribe el código de seis
+            dígitos.
           </AuthPanelDescription>
         </AuthPanelHeader>
         <form onSubmit={submitCode} noValidate>
@@ -372,7 +372,10 @@ export function PasswordResetForm({
           render={
             <Link
               to="/login"
-              search={{ redirect: '/account', email: sanitizeEmail(email) }}
+              search={{
+                redirect: '/account',
+                identifier: sanitizeIdentifier(identifier),
+              }}
             />
           }
         >

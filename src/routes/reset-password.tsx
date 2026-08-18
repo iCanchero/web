@@ -2,11 +2,12 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { AuthShell } from '@/components/auth/auth-shell'
 import { PasswordResetForm } from '@/components/auth/password-reset-form'
-import { sanitizeEmail } from '@/lib/auth/redirects'
+import { sanitizeEmail, sanitizeIdentifier } from '@/lib/auth/redirects'
 import { createSeoHead } from '@/lib/seo'
 
 type ResetSearch = {
   email?: string
+  identifier?: string
 }
 
 export const Route = createFileRoute('/reset-password')({
@@ -19,6 +20,7 @@ export const Route = createFileRoute('/reset-password')({
     }),
   validateSearch: (search: Record<string, unknown>): ResetSearch => ({
     email: sanitizeEmail(search.email),
+    identifier: sanitizeIdentifier(search.identifier),
   }),
   component: ResetPasswordPage,
 })
@@ -28,7 +30,9 @@ function ResetPasswordPage() {
 
   return (
     <AuthShell>
-      <PasswordResetForm initialEmail={search.email} />
+      <PasswordResetForm
+        initialIdentifier={search.identifier ?? search.email}
+      />
     </AuthShell>
   )
 }

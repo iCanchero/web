@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { DEFAULT_AUTH_REDIRECT, sanitizeRedirect } from './redirects'
+import {
+  DEFAULT_AUTH_REDIRECT,
+  sanitizeIdentifier,
+  sanitizeRedirect,
+} from './redirects'
 
 describe('sanitizeRedirect', () => {
   it.each([
@@ -17,4 +21,21 @@ describe('sanitizeRedirect', () => {
       '/account?from=home#profile',
     )
   })
+})
+
+describe('sanitizeIdentifier', () => {
+  it.each([
+    [' Person@Example.com ', 'person@example.com'],
+    ['@Jugador_1', 'jugador_1'],
+    ['Jugador_1', 'jugador_1'],
+  ])('normalizes %s', (value, expected) => {
+    expect(sanitizeIdentifier(value)).toBe(expected)
+  })
+
+  it.each(['not-an-identifier', '@person@example.com', 'ab'])(
+    'rejects %s',
+    (value) => {
+      expect(sanitizeIdentifier(value)).toBeUndefined()
+    },
+  )
 })

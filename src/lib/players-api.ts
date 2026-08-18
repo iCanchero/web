@@ -251,13 +251,15 @@ async function request<T>(
   }
 }
 
-function normalizeEmail(email: string): string {
-  return email.trim().toLowerCase()
-}
-
 function normalizeUsername(username: string): string {
   const normalized = username.trim().toLowerCase()
-  return normalized.startsWith('@') ? normalized.slice(1) : normalized
+  return normalized.startsWith('@') && normalized.indexOf('@', 1) < 0
+    ? normalized.slice(1)
+    : normalized
+}
+
+function normalizeIdentifier(identifier: string): string {
+  return normalizeUsername(identifier)
 }
 
 export type PlayersApi = {
@@ -265,9 +267,9 @@ export type PlayersApi = {
     username: string,
     password: string,
   ) => Promise<UsernameLoginResponse>
-  requestPasswordReset: (email: string) => Promise<void>
+  requestPasswordReset: (identifier: string) => Promise<void>
   verifyPasswordResetCode: (
-    email: string,
+    identifier: string,
     code: string,
   ) => Promise<VerifyPasswordResetResponse>
   resetPassword: (token: string, newPassword: string) => Promise<void>
@@ -288,17 +290,20 @@ export const playersApi: PlayersApi = {
     })
   },
 
-  requestPasswordReset(email: string) {
+  requestPasswordReset(identifier: string) {
     return request<void>('users/verifications/password-reset', {
       method: 'POST',
-      body: { email: normalizeEmail(email) },
+      body: { identifier: normalizeIdentifier(identifier) },
     })
   },
 
-  verifyPasswordResetCode(email: string, code: string) {
+  verifyPasswordResetCode(identifier: string, code: string) {
     return request<VerifyPasswordResetResponse>('users/verifications/verify', {
       method: 'POST',
-      body: { email: normalizeEmail(email), code: code.trim() },
+      body: {
+        identifier: normalizeIdentifier(identifier),
+        code: code.trim(),
+      },
     })
   },
 
