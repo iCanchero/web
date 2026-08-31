@@ -11,6 +11,7 @@ import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
+import { AppLinkNotFoundPage } from '@/components/app-link-not-found-page'
 import { AuthProvider } from '@/components/auth/auth-provider'
 import { AuthRouterSync } from '@/components/auth/auth-router-sync'
 import {
@@ -48,6 +49,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       ],
     }
   },
+  notFoundComponent: AppLinkNotFoundPage,
   shellComponent: RootDocument,
 })
 
