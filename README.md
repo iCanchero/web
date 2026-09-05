@@ -86,23 +86,59 @@ Define these in Vercel Project Settings for both Production and Preview as neede
 
 Notes:
 
-- Local `.env*` files can keep placeholders only.
-- Real deployed values should come from Vercel environment variables.
+- These association variables are read by the server at request time. Vite's
+  build-time `.env.production` loading does not configure a deployed Node process.
+- Set the variables in the hosting project's Production/Preview environment and
+  deploy again for the running server to receive them.
 
 ## Deep Link Verification Files
 
-This project serves platform verification files at:
+The public, unauthenticated GET routes are:
 
 - `/.well-known/apple-app-site-association`
 - `/.well-known/assetlinks.json`
 
-Set these environment variables in your deployment:
+Both return JSON with a five-minute cache when configured. Invalid or missing
+configuration returns HTTP 503 with `Cache-Control: no-store`, rather than a
+successful response containing an unusable association.
 
-- `APPLE_TEAM_ID`: Apple Team ID used to compose iOS app IDs
-- `IOS_BUNDLE_ID`: defaults to `com.icanchero.app`
-- `IOS_APP_ID`: optional override, e.g. `ABCDE12345.com.icanchero.app`
-- `ANDROID_PACKAGE_NAME`: defaults to `com.icanchero.app`
-- `ANDROID_SHA256_FINGERPRINTS`: comma-separated SHA256 fingerprints for the deployed app signing certs```
+Production runtime settings for `app.icanchero.com`:
+
+```dotenv
+APPLE_TEAM_ID=3V782SQX2A
+IOS_BUNDLE_ID=com.icanchero.app
+IOS_APP_ID=3V782SQX2A.com.icanchero.app
+ANDROID_PACKAGE_NAME=com.icanchero.app
+ANDROID_SHA256_FINGERPRINTS=38:AC:21:75:88:9C:4D:C0:20:72:69:43:DF:CF:EF:6B:A8:DC:AD:2D:2B:B5:FF:AB:B8:50:B9:C6:5F:DB:58:D1
+```
+
+The Apple team ID was confirmed against the saved EAS production credentials.
+The Android SHA-256 was read from the default EAS credentials for
+`icanchero` / `com.icanchero.app` on 2026-09-05. It covers APKs signed with that
+keystore. For Play Store distribution, append the **Play app signing certificate**
+SHA-256 from Play Console's App integrity page, separated by a comma. Firebase's
+registered fingerprints are used for Firebase/Google services; the SHA-1 values
+in `google-services.json` are not valid SHA-256 website associations.
+
+`IOS_APP_ID` is an optional full `application-identifier` override. Otherwise the
+route composes `APPLE_TEAM_ID.IOS_BUNDLE_ID`. If Apple's App ID prefix differs
+from the team ID, use the prefix in `IOS_APP_ID`. If both `IOS_APP_ID` and
+`IOS_BUNDLE_ID` are supplied, their bundle identifiers must match.
+
+For `app-dev.icanchero.com`, configure the `.dev` bundle/package and its own
+signing fingerprint. Do not reuse the production Android fingerprint without
+checking the development signing certificate.
+
+Before installing a new native build, verify both production GET endpoints
+return HTTP 200 and the JSON above, without a redirect or authentication page.
+The app must also contain `applinks:app.icanchero.com` on iOS and the matching
+verified HTTPS intent filter on Android. Apple caches associations through its
+CDN, so website changes may not immediately reach an already-installed app.
+
+```bash
+curl -i https://app.icanchero.com/.well-known/apple-app-site-association
+curl -i https://app.icanchero.com/.well-known/assetlinks.json
+```
 
 ## Styling
 
