@@ -28,7 +28,7 @@ these public client variables:
 Run the focused development and verification commands from this directory:
 
 ```bash
-npm install
+npm ci
 npm run dev
 npm test
 npm run typecheck
@@ -44,7 +44,7 @@ a manual environment check.
 To run this application:
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
@@ -52,8 +52,32 @@ npm run dev
 
 To build this application for production:
 
-````bash
+```bash
 npm run build
+```
+
+Use Node.js 22.12 or newer. For a local production server:
+
+```bash
+npm start
+```
+
+### TanStack Start stable baseline
+
+This app uses TanStack Start 1.169.2 or newer (1.169 is the first stable
+release), Vite 8, and the `nitro/vite` adapter. TanStack packages use explicit
+version ranges rather than `latest`; commit lockfile updates with dependency
+changes. Both `package-lock.json` and `bun.lock` are tracked, so keep both in sync
+when changing dependencies. The commands here use npm and its lockfile.
+
+The RC migration does not require an authentication rewrite: Firebase auth is
+initialized in the browser and the Players API remains the authorization
+boundary. This app does not use Start's removed `useSession` or
+`.inputValidator()` APIs, or a custom server entry. Its association endpoints
+return explicit `Response` objects, preserving their status, JSON, and cache
+headers under the stable response rules.
+
+Migration reference: [TanStack RC migration guide](https://tanstack.com/start/latest/docs/framework/react/migrate-from-release-candidate).
 
 ## Vercel Deployment
 
@@ -161,7 +185,7 @@ This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.
 npm run lint
 npm run format
 npm run check
-````
+```
 
 ## Shadcn
 
@@ -177,10 +201,14 @@ This project uses Nitro as a generic server adapter, so it can run on any Node-c
 
 ```bash
 npm run build
-node dist/server/index.mjs
+npm start
 ```
 
-The build output is a self-contained Node server. To deploy, push the `dist/` directory to your host (Render, Fly.io, your own VPS, etc.) and run the server command above.
+The default Node build emits `.output/server/index.mjs` and client assets in
+`.output/public/`. Deploy the complete `.output/` directory to a Node host and
+run `node .output/server/index.mjs`. Nitro detects Vercel during a Vercel build
+and emits the provider-specific output instead; `npm start` is for the default
+local Node build.
 
 For host-specific presets (Vercel, Netlify, Cloudflare, AWS Lambda, etc.) and tuning, see https://v3.nitro.build/deploy.
 
@@ -284,12 +312,11 @@ You can create API routes by using the `server` property in your route definitio
 
 ```tsx
 import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
 
 export const Route = createFileRoute('/api/hello')({
   server: {
     handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
+      GET: () => Response.json({ message: 'Hello, World!' }),
     },
   },
 })
