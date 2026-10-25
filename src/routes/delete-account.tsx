@@ -75,6 +75,14 @@ function DeleteAccountResource() {
             deshacer.
           </p>
           <p className="text-muted-foreground text-sm">
+            Si usaste Iniciar sesión con Apple, después de eliminar tu cuenta
+            podrás desconectar iCanchero desde Inicio de sesión y seguridad en{' '}
+            <a className="underline" href="https://account.apple.com/">
+              tu cuenta Apple
+            </a>
+            .
+          </p>
+          <p className="text-muted-foreground text-sm">
             Si necesitas ayuda, escribe a{' '}
             <a
               className="underline underline-offset-4"

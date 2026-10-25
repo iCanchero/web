@@ -41,6 +41,17 @@ function AccountDeletedPage() {
             Los registros operativos que deban conservarse seguirán la política
             informada y permanecerán anonimizados, sin asociación con tu perfil.
           </p>
+          <p className="text-muted-foreground mt-4 text-sm">
+            Si usaste Iniciar sesión con Apple y no desconectaste Apple durante
+            la eliminación, entra a{' '}
+            <a className="underline" href="https://account.apple.com/">
+              tu cuenta Apple
+            </a>
+            , abre Inicio de sesión y seguridad &gt; Iniciar sesión con Apple,
+            selecciona iCanchero y deja de usar Iniciar sesión con Apple. Tu
+            cuenta de iCanchero ya fue eliminada aunque este paso esté
+            pendiente.
+          </p>
         </AuthPanelContent>
         <AuthPanelFooter className="flex flex-wrap gap-2">
           <Button nativeButton={false} render={<Link to="/" />}>
